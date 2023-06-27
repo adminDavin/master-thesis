@@ -117,7 +117,7 @@ def getBasicHyperparams():
         'metrics': ['mean_squared_error'],
     }
 
-def trainModels(modelList, filename, targetColumns, retrain=False, save=True):
+def trainModels(workbook, modelList, filename, targetColumns, retrain=False, save=True):
     # Trains or loads each model of a provided list of models
 
     if retrain:
@@ -155,7 +155,7 @@ def trainModels(modelList, filename, targetColumns, retrain=False, save=True):
     print("trainingSummary: {0}".format(trainingSummary))
     if trainingSummary:
         prints.printTrainingSummary(trainingSummary)
-        plots.plotTrainingSummary(trainingSummary)
+        plots.plotTrainingSummary(workbook, trainingSummary)
 
 def loadModel(modelname, filename, targetColumns, ensembleName=None):
     # Loads a single model based on a defined modelname-filename-targetColumns combination

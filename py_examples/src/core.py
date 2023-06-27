@@ -230,7 +230,7 @@ def initModels(modelList):
     _indexColumn = _df_test.iloc[_maxEnrolWindow:].index
     _modelList = modelList
 
-def trainModels(retrain=False):
+def trainModels(workbook, retrain=False):
     """
     FUNCTION:
         Used to train the models previously provided in the initModels method
@@ -245,6 +245,7 @@ def trainModels(retrain=False):
     global _modelList, _filename, _targetColumns
 
     modelFuncs.trainModels(
+        workbook,
         _modelList,
         _filename,
         _targetColumns,
@@ -372,7 +373,7 @@ def MLP(
     """
     FUNCTION:
         Used to create a Neural Network model using multilayer perceptron
-    
+        MLP 是一种前馈神经网络，由多个全连接层（Dense Layer）组成。每个全连接层都将前一层的输出作为输入，并使用权重矩阵将输入映射到输出。MLP 的主要优点是可以适用于多种类型的数据，例如图像、文本、数值等，但是对于序列数据（例如时间序列）的处理能力较弱。
     PARAMS:
         name: str
             A name/alias given to the model by the user
@@ -446,7 +447,7 @@ def LSTM(
         Used to create a Recurrent Neural Network model using
         Long-Short Term Memory neurons (LSTM). Uses 
         traditional dropout as regularization method
-    
+        LSTM 是一种常用的循环神经网络（RNN）结构，主要用于处理序列数据。LSTM 的主要特点是能够记住长期的依赖关系，避免了常规 RNN 的梯度消失和爆炸问题，因此在处理长期依赖关系的任务上表现较好。LSTM 的核心思想是引入三个门（input gate、forget gate、output gate），控制信息的输入、遗忘和输出。这些门可以学习如何选择性地保留或遗忘信息，从而实现长期依赖关系的处理。
     PARAMS:
         name: str
             A name/alias given to the model by the user
@@ -608,7 +609,16 @@ def Linear_Regularized(
     FUNCTION:
         Used to create a Linear Machine Learning model with built-in
         regularization and cross validation
-    
+    RidgeCV 是 scikit-learn 中的一个模型选择工具，用于选择最佳的岭回归（Ridge Regression）模型。岭回归是一种常用的线性回归方法，它通过对系数进行约束，可以有效地处理高维数据和共线性数据。
+
+    RidgeCV 的主要作用是通过交叉验证来选择最佳的正则化参数 alpha，以达到最小化岭回归模型的预测误差的目的。RidgeCV 的参数包括：
+
+        alphas：正则化参数 alpha 的备选值，可以是一个列表或者一个数组；
+        cv：交叉验证的折数，默认为 None，表示使用默认的 5 折交叉验证；
+        normalize：是否对特征进行归一化，默认为 False；
+        scoring：评估指标，默认为 None，表示使用默认的 R^2 评估指标；
+        store_cv_values：是否存储交叉验证的结果，默认为 False。
+
     PARAMS:
         name: str
             A name/alias given to the model by the user
@@ -1044,33 +1054,43 @@ def setLSTMCallbacks(patience_es, patience_rlr):
     global _default_LSTM_args
     _default_LSTM_args['callbacks'] = modelFuncs.getBasicCallbacks(patience_es=patience_es, patience_rlr=patrience_rlr)
 
+# 相关矩阵
 def correlationMatrix(df):
     return analysis.correlationMatrix(df)
 
+# 主成分分析
 def pca(df, numberOfComponents, relevantColumns=None, columnDescriptions=None):
     return analysis.pca(df, numberOfComponents, relevantColumns, columnDescriptions)
 
+# 主成分绘制
 def pcaPlot(df, timestamps=None, plotTitle=None):
     return analysis.pcaPlot(df, timestamps, plotTitle)
 
+# 两个主成分分析绘制
 def pcaDuoPlot(df_train, df_test_1, df_test_2, plotTitle=None):
     return analysis.pcaDuoPlot(df_train, df_test_1, df_test_2, plotTitle)
 
+# 散点矩阵图
 def pairplot(df):
     return analysis.pairplot(df)
 
+# 散点图
 def scatterplot(df):
     return analysis.scatterplot(df)
 
+# 相关性图
 def correlationPlot(df, title="Correlation plot"):
     return analysis.correlationPlot(df, title)
 
+# 相关性双图
 def correlationDuoPlot(df1, df2, title1="Correlation plot 1", title2="Correlation plot 2"):
     return analysis.correlationDuoPlot(df1, df2, title1, title2)
 
+# 相关性差异图
 def correlationDifferencePlot(df1, df2, title="Correlation difference plot"):
     return analysis.correlationDifferencePlot(df1, df2, title)
 
+# 值分布
 def valueDistribution(df, traintime, testtime, columnDescriptions, columnUnits):
     return analysis.valueDistribution(df, traintime, testtime, columnDescriptions, columnUnits)
 

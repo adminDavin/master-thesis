@@ -83,7 +83,11 @@ modelList = [
 retrain=False
 
 mlModule.initModels(modelList)
-mlModule.trainModels(retrain)
+from openpyxl import Workbook
+
+workbook = Workbook()
+mlModule.trainModels(workbook, retrain)
+workbook.save(filename='./写入表格.xlsx')
 
 modelNames, metrics_train, metrics_test, columnsList, deviationsList = mlModule.predictWithModels(
 	plot=True,
